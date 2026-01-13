@@ -2,9 +2,10 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { Specialist } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
-
 export async function filterSpecialistsWithAI(query: string, specialists: Specialist[]): Promise<string[]> {
+  // Инициализируем прямо перед использованием, чтобы убедиться, что окружение готово
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
+  
   const response = await ai.models.generateContent({
     model: "gemini-3-flash-preview",
     contents: `Пользователь ищет: "${query}". 
