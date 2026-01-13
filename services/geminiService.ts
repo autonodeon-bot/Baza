@@ -2,7 +2,7 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { Specialist } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
 
 export async function filterSpecialistsWithAI(query: string, specialists: Specialist[]): Promise<string[]> {
   const response = await ai.models.generateContent({
@@ -20,8 +20,11 @@ export async function filterSpecialistsWithAI(query: string, specialists: Specia
     },
   });
 
+  const text = response.text;
+  if (!text) return [];
+
   try {
-    return JSON.parse(response.text.trim());
+    return JSON.parse(text.trim());
   } catch (e) {
     console.error("AI parsing error", e);
     return [];
